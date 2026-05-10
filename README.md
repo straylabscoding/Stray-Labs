@@ -26,9 +26,8 @@ Nuestra ventaja competitiva radica en el flujo de trabajo **Vibe Coding** (VS Co
 ## 💻 Stack Tecnológico
 - **Frontend:** React / Next.js
 - **Backend & APIs:** Node / Python
-- **IA:** Anthropic (Claude), OpenAI, Groq, Ollama
-- **Base de Datos:** Supabase / PostgreSQL
-- **Deploy:** Vercel / Railway
+- **IA:** Anthropic (Claude), v0, Gemini, entre otros mas...
+- **Deploy:** github (gratis), si gusta incluir un dominio personalizado, se añadirian costos extra.
 
 ## 📊 Comparativa de Entrega
 
