@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>STRΔY Labs — Digital Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Flex:opsz,wdth,wght@8..144,25..151,100..900&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  /* ── DESIGN TOKENS ── */
+  :root {
+    --primary: #1A1A2E;
+    --primary-dim: #16213E;
+    --secondary: #0F3460;
+    --accent: #E94560;
+    --accent-dim: rgba(233,69,96,0.12);
+    --accent-mid: rgba(233,69,96,0.25);
+    --surface: #F7F5F2;
+    --surface-alt: #EFEDE8;
+    --surface-card: #FAFAF8;
+    --surface-strong: #1A1A2E;
+    --on-surface: #1A1A2E;
+    --on-surface-dim: #4A4A6A;
+    --on-surface-muted: #8888AA;
+    --border: rgba(26,26,46,0.1);
+    --border-accent: rgba(233,69,96,0.3);
+    --delta-color: rgba(233,69,96,0.06);
+    --shadow-sm: 0 2px 8px rgba(26,26,46,0.06);
+    --shadow-md: 0 8px 32px rgba(26,26,46,0.10);
+    --shadow-lg: 0 24px 64px rgba(26,26,46,0.14);
+    --radius-sm: 12px;
+    --radius-md: 20px;
+    --radius-lg: 32px;
+    --radius-xl: 48px;
+    --ease-expressive: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-decel: cubic-bezier(0, 0, 0.2, 1);
+  }
+
+  /* ── DARK MODE TOKENS ── */
+  html.dark {
+    --primary: #EAE8E4;
+    --primary-dim: #C8C4BE;
+    --secondary: #7BA7D4;
+    --accent: #E94560;
+    --accent-dim: rgba(233,69,96,0.15);
+    --accent-mid: rgba(233,69,96,0.28);
+    --surface: #0D0D18;
+    --surface-alt: #131320;
+    --surface-card: #181828;
+    --surface-strong: #181828;
+    --on-surface: #EAE8E4;
+    --on-surface-dim: #9A98B8;
+    --on-surface-muted: #5A5878;
+    --border: rgba(234,232,228,0.08);
+    --border-accent: rgba(233,69,96,0.35);
+    --delta-color: rgba(233,69,96,0.08);
+    --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+    --shadow-md: 0 8px 32px rgba(0,0,0,0.4);
+    --shadow-lg: 0 24px 64px rgba(0,0,0,0.5);
+  }
+
+  /* ── THEME TRANSITION ── */
+  body, nav, .hero-card, .service-card, .hosting-plan, .cta-card,
+  .note-body, .note-trigger, footer, .marquee-section, .hosting {
+    transition-property: background, background-color, border-color, color, box-shadow;
+    transition-duration: 0.45s;
+    transition-timing-function: var(--ease-smooth);
+  }
+
+  /* ── THEME TOGGLE BUTTON ── */
+  .theme-toggle {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, background 0.3s, transform 0.4s var(--ease-expressive), box-shadow 0.3s;
+    flex-shrink: 0;
+  }
+  .theme-toggle:hover {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+    transform: rotate(20deg) scale(1.08);
+    box-shadow: 0 0 16px rgba(233,69,96,0.2);
+  }
+  .theme-toggle .icon-sun,
+  .theme-toggle .icon-moon {
+    position: absolute;
+    transition: opacity 0.35s var(--ease-smooth), transform 0.45s var(--ease-expressive);
+    color: var(--on-surface-dim);
+  }
+  html:not(.dark) .icon-sun  { opacity: 1;  transform: rotate(0deg) scale(1); }
+  html:not(.dark) .icon-moon { opacity: 0;  transform: rotate(-90deg) scale(0.6); }
+  html.dark       .icon-sun  { opacity: 0;  transform: rotate(90deg) scale(0.6); }
+  html.dark       .icon-moon { opacity: 1;  transform: rotate(0deg) scale(1); }
+
+  /* ── NAV scrolled dark override ── */
+  html.dark nav.scrolled {
+    background: rgba(13,13,24,0.88);
+    box-shadow: 0 1px 0 rgba(234,232,228,0.06);
+  }
+
+  /* ── SLOGAN ROTATOR ── */
+  .slogan-wrap {
+    height: 28px;
+    overflow: hidden;
+    margin-bottom: 48px;
+    position: relative;
+  }
+  .slogan-track {
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.72s cubic-bezier(0.77, 0, 0.175, 1);
+  }
+  .slogan-item {
+    height: 28px;
+    display: flex; align-items: center;
+    font-size: 15px;
+    font-variation-settings: 'wght' 380;
+    line-height: 1;
+    color: var(--on-surface-dim);
+    white-space: nowrap;
+    flex-shrink: 0;
+    letter-spacing: 0.005em;
+  }
+  .slogan-item .slogan-bar {
+    display: inline-block;
+    width: 3px; height: 14px;
+    background: var(--accent);
+    border-radius: 2px;
+    margin-right: 12px;
+    flex-shrink: 0;
+    opacity: 0.7;
+  }
+  /* fade edges */
+  .slogan-wrap::before,
+  .slogan-wrap::after {
+    content: '';
+    position: absolute; left: 0; right: 0; height: 6px; z-index: 2; pointer-events: none;
+  }
+  .slogan-wrap::before { top: 0; background: linear-gradient(to bottom, var(--surface), transparent); }
+  .slogan-wrap::after  { bottom: 0; background: linear-gradient(to top, var(--surface), transparent); }
+
+  /* ── RESET & BASE ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; font-size: 16px; }
+  body {
+    background: var(--surface);
+    color: var(--on-surface);
+    font-family: 'Roboto Flex', system-ui, sans-serif;
+    font-variation-settings: 'wght' 400, 'wdth' 100;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a { text-decoration: none; color: inherit; }
+  ::selection { background: var(--accent); color: #fff; }
+
+  /* ── CUSTOM CURSOR ── */
+  .cursor {
+    position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9999;
+    width: 12px; height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s var(--ease-expressive), height 0.3s var(--ease-expressive),
+                background 0.3s var(--ease-smooth), border-radius 0.4s var(--ease-expressive);
+  }
+  .cursor.hover {
+    width: 40px; height: 40px;
+    background: rgba(233,69,96,0.15);
+    border-radius: 40%;
+  }
+  .cursor.click { width: 8px; height: 8px; }
+  .cursor-ring {
+    position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9998;
+    width: 36px; height: 36px;
+    border: 1.5px solid rgba(233,69,96,0.4);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.5s var(--ease-smooth), height 0.5s var(--ease-smooth),
+                opacity 0.3s var(--ease-smooth), border-radius 0.4s var(--ease-expressive);
+  }
+  .cursor-ring.hover { width: 60px; height: 60px; border-radius: 30%; opacity: 0.6; }
+
+  /* ── SCROLL PROGRESS ── */
+  .scroll-progress {
+    position: fixed; top: 0; left: 0; width: 0%; height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--secondary));
+    z-index: 1000;
+    transition: width 0.1s linear;
+  }
+
+  /* ── LOADER ── */
+  .loader {
+    position: fixed; inset: 0; z-index: 9000;
+    background: var(--surface-strong);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 24px;
+    transition: opacity 0.8s var(--ease-smooth), transform 0.8s var(--ease-smooth);
+  }
+  .loader.out { opacity: 0; transform: translateY(-100%); pointer-events: none; }
+  .loader-delta {
+    width: 80px; height: 80px; position: relative;
+  }
+  .loader-delta svg { width: 100%; height: 100%; }
+  .delta-path {
+    stroke: var(--accent);
+    stroke-width: 2;
+    fill: none;
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    animation: drawDelta 1.2s var(--ease-smooth) forwards;
+  }
+  .delta-fill {
+    fill: var(--accent);
+    opacity: 0;
+    animation: fillDelta 0.4s var(--ease-smooth) 1.1s forwards;
+  }
+  @keyframes drawDelta {
+    to { stroke-dashoffset: 0; }
+  }
+  @keyframes fillDelta {
+    to { opacity: 0.15; }
+  }
+  .loader-text {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: rgba(255,255,255,0.4);
+    animation: fadeInText 0.6s var(--ease-smooth) 0.8s both;
+  }
+  @keyframes fadeInText { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 800;
+    padding: 20px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: background 0.4s var(--ease-smooth), backdrop-filter 0.4s, box-shadow 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(247,245,242,0.88);
+    backdrop-filter: blur(20px) saturate(1.5);
+    box-shadow: 0 1px 0 var(--border);
+  }
+  .nav-logo {
+    font-size: 18px;
+    font-variation-settings: 'wght' 700, 'wdth' 100;
+    letter-spacing: -0.02em;
+    color: var(--primary);
+    display: flex; align-items: center; gap: 2px;
+  }
+  .nav-logo .delta { color: var(--accent); }
+  .nav-links {
+    display: flex; align-items: center; gap: 36px;
+  }
+  .nav-links a {
+    font-size: 13px;
+    font-variation-settings: 'wght' 450;
+    letter-spacing: 0.01em;
+    color: var(--on-surface-dim);
+    position: relative;
+    transition: color 0.2s;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1px;
+    background: var(--accent);
+    transition: width 0.3s var(--ease-expressive);
+  }
+  .nav-links a:hover { color: var(--on-surface); }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    background: var(--surface-strong);
+    color: #F7F5F2 !important;
+    padding: 10px 22px;
+    border-radius: var(--radius-xl);
+    font-variation-settings: 'wght' 550 !important;
+    transition: background 0.3s var(--ease-smooth), transform 0.3s var(--ease-expressive), box-shadow 0.3s !important;
+  }
+  .nav-cta::after { display: none !important; }
+  .nav-cta:hover {
+    background: var(--accent) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 8px 24px rgba(233,69,96,0.3) !important;
+  }
+
+  /* ── SECTION BASE ── */
+  section { position: relative; overflow: hidden; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 48px; }
+  .section-label {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+  }
+  .section-label::before {
+    content: '';
+    width: 20px; height: 1px;
+    background: var(--accent);
+  }
+
+  /* ── REVEAL ANIMATIONS ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s var(--ease-decel), transform 0.8s var(--ease-decel);
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+  .reveal-delay-5 { transition-delay: 0.5s; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 120px 0 80px;
+    position: relative;
+  }
+  .hero-bg-delta {
+    position: absolute; right: -8%; top: 50%;
+    transform: translateY(-50%);
+    width: 55vw; height: 55vw;
+    max-width: 700px; max-height: 700px;
+    opacity: 0.04;
+    pointer-events: none;
+  }
+  .hero-bg-delta svg { width: 100%; height: 100%; }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .hero-eyebrow {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 28px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .eyebrow-dot {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.4); opacity: 0.6; }
+  }
+  .hero-title {
+    font-size: clamp(52px, 6vw, 88px);
+    font-variation-settings: 'wght' 800, 'wdth' 95;
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    color: var(--primary);
+    margin-bottom: 32px;
+  }
+  .hero-title .accent { color: var(--accent); }
+  .hero-title .block { display: block; }
+  .hero-sub {
+    font-size: 16px;
+    font-variation-settings: 'wght' 350;
+    line-height: 1.7;
+    color: var(--on-surface-dim);
+    max-width: 400px;
+    margin-bottom: 48px;
+  }
+  .hero-actions {
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: var(--surface-strong);
+    color: #F7F5F2;
+    padding: 16px 32px;
+    border-radius: var(--radius-xl);
+    font-size: 14px;
+    font-variation-settings: 'wght' 600;
+    letter-spacing: 0.01em;
+    border: none;
+    cursor: pointer;
+    position: relative; overflow: hidden;
+    transition: transform 0.4s var(--ease-expressive), box-shadow 0.4s var(--ease-smooth),
+                border-radius 0.4s var(--ease-expressive);
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: var(--accent);
+    transform: translateX(-100%);
+    transition: transform 0.4s var(--ease-smooth);
+    border-radius: inherit;
+  }
+  .btn-primary:hover::before { transform: translateX(0); }
+  .btn-primary:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 12px 36px rgba(233,69,96,0.35);
+    border-radius: var(--radius-lg);
+  }
+  .btn-primary span { position: relative; z-index: 1; }
+  .btn-primary svg { position: relative; z-index: 1; transition: transform 0.3s var(--ease-expressive); }
+  .btn-primary:hover svg { transform: translate(2px, -2px); }
+
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: var(--on-surface-dim);
+    padding: 16px 24px;
+    border-radius: var(--radius-xl);
+    font-size: 14px;
+    font-variation-settings: 'wght' 450;
+    border: 1.5px solid var(--border);
+    cursor: pointer;
+    transition: color 0.3s, border-color 0.3s, background 0.3s, transform 0.3s var(--ease-expressive);
+  }
+  .btn-ghost:hover {
+    color: var(--on-surface);
+    border-color: var(--on-surface);
+    background: rgba(26,26,46,0.04);
+    transform: translateY(-1px);
+  }
+
+  .hero-visual {
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hero-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.5s var(--ease-expressive), box-shadow 0.5s;
+  }
+  .hero-card:hover {
+    transform: translateY(-4px) rotate(-0.5deg);
+    box-shadow: 0 32px 80px rgba(26,26,46,0.16);
+  }
+  .hero-card-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(233,69,96,0.08);
+    border: 1px solid rgba(233,69,96,0.2);
+    border-radius: 100px;
+    padding: 6px 14px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    margin-bottom: 28px;
+  }
+  .card-live-dot {
+    width: 5px; height: 5px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  .hero-card-stat {
+    margin-bottom: 24px;
+  }
+  .stat-number {
+    font-size: 56px;
+    font-variation-settings: 'wght' 800;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    color: var(--primary);
+    display: block;
+  }
+  .stat-label {
+    font-size: 12px;
+    font-variation-settings: 'wght' 400;
+    color: var(--on-surface-muted);
+    letter-spacing: 0.05em;
+  }
+  .hero-card-tags {
+    display: flex; flex-wrap: wrap; gap: 8px;
+    margin-top: 28px;
+  }
+  .tag {
+    padding: 6px 14px;
+    background: var(--surface-alt);
+    border-radius: 100px;
+    font-size: 11px;
+    font-variation-settings: 'wght' 450;
+    color: var(--on-surface-dim);
+    border: 1px solid var(--border);
+    transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.3s var(--ease-expressive);
+  }
+  .tag:hover {
+    background: var(--accent-dim);
+    color: var(--accent);
+    border-color: var(--border-accent);
+    transform: translateY(-2px);
+  }
+  .card-delta-bg {
+    position: absolute; bottom: -20px; right: -20px;
+    width: 120px; height: 120px; opacity: 0.04;
+    pointer-events: none;
+  }
+  .hero-scroll-hint {
+    position: absolute; bottom: 40px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: var(--on-surface-muted);
+    font-size: 10px;
+    font-family: 'Roboto Mono', monospace;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    animation: scrollBounce 2s ease-in-out infinite;
+  }
+  @keyframes scrollBounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+  }
+  .scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+  }
+
+  /* ── MARQUEE ── */
+  .marquee-section {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 18px 0;
+    overflow: hidden;
+    background: var(--surface-alt);
+  }
+  .marquee-track {
+    display: flex;
+    animation: marquee 24s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    display: inline-flex; align-items: center; gap: 24px;
+    padding: 0 40px;
+    font-size: 12px;
+    font-family: 'Roboto Mono', monospace;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(247,245,242,0.4);
+    flex-shrink: 0;
+  }
+  .marquee-item .marker {
+    color: var(--accent); font-size: 14px;
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* ── SERVICES ── */
+  .services {
+    padding: 120px 0;
+  }
+  .services-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    margin-bottom: 80px;
+    align-items: end;
+  }
+  .section-title {
+    font-size: clamp(36px, 4vw, 56px);
+    font-variation-settings: 'wght' 750, 'wdth' 95;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--primary);
+  }
+  .section-title .accent { color: var(--accent); }
+  .services-desc {
+    font-size: 15px;
+    font-variation-settings: 'wght' 350;
+    line-height: 1.75;
+    color: var(--on-surface-dim);
+    align-self: end;
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .services-grid .card-wide {
+    grid-column: span 2;
+  }
+  .service-card {
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 36px;
+    position: relative;
+    overflow: hidden;
+    cursor: auto;
+    transition: transform 0.5s var(--ease-expressive), box-shadow 0.5s, border-color 0.3s;
+  }
+  .service-card::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, var(--accent-dim), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.4s var(--ease-smooth);
+    pointer-events: none;
+  }
+  .service-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--border-accent);
+  }
+  .service-card:hover::after { opacity: 1; }
+  .service-number {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    margin-bottom: 20px;
+    display: block;
+  }
+  .service-icon {
+    width: 44px; height: 44px;
+    background: var(--accent-dim);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 20px;
+    transition: transform 0.4s var(--ease-expressive), background 0.3s;
+    position: relative; z-index: 1;
+  }
+  .service-card:hover .service-icon {
+    transform: scale(1.1) rotate(-4deg);
+    background: rgba(233,69,96,0.18);
+  }
+  .service-icon svg { color: var(--accent); }
+  .service-title {
+    font-size: 22px;
+    font-variation-settings: 'wght' 700;
+    letter-spacing: -0.02em;
+    color: var(--primary);
+    margin-bottom: 12px;
+    position: relative; z-index: 1;
+  }
+  .service-desc {
+    font-size: 13px;
+    font-variation-settings: 'wght' 350;
+    line-height: 1.7;
+    color: var(--on-surface-dim);
+    position: relative; z-index: 1;
+  }
+  .service-tags {
+    display: flex; flex-wrap: wrap; gap: 6px;
+    margin-top: 24px;
+    position: relative; z-index: 1;
+  }
+  .service-tag {
+    padding: 4px 10px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 10px;
+    font-family: 'Roboto Mono', monospace;
+    letter-spacing: 0.1em;
+    color: var(--on-surface-muted);
+  }
+  .card-delta-accent {
+    position: absolute; bottom: -24px; right: -24px;
+    width: 100px; height: 100px;
+    opacity: 0.04;
+    pointer-events: none;
+    transition: opacity 0.4s, transform 0.4s var(--ease-expressive);
+  }
+  .service-card:hover .card-delta-accent { opacity: 0.08; transform: scale(1.1) rotate(5deg); }
+
+  /* ── HOSTING ── */
+  .hosting {
+    padding: 120px 0;
+    background: var(--surface-alt);
+    border-radius: var(--radius-xl);
+    margin: 0 24px;
+  }
+  .hosting-inner { padding: 0 80px; }
+  .hosting-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  .hosting-plan {
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s var(--ease-expressive), box-shadow 0.4s;
+  }
+  .hosting-plan:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .plan-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .plan-badge.base {
+    background: rgba(15,52,96,0.08);
+    color: var(--secondary);
+    border: 1px solid rgba(15,52,96,0.2);
+  }
+  .plan-badge.custom {
+    background: var(--accent-dim);
+    color: var(--accent);
+    border: 1px solid var(--border-accent);
+  }
+  .plan-title {
+    font-size: 26px;
+    font-variation-settings: 'wght' 700;
+    letter-spacing: -0.025em;
+    color: var(--primary);
+    margin-bottom: 12px;
+  }
+  .plan-desc {
+    font-size: 14px;
+    font-variation-settings: 'wght' 350;
+    line-height: 1.7;
+    color: var(--on-surface-dim);
+    margin-bottom: 32px;
+  }
+  .plan-features { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+  .plan-features li {
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 13px;
+    font-variation-settings: 'wght' 400;
+    color: var(--on-surface-dim);
+    line-height: 1.5;
+  }
+  .plan-features li .check {
+    width: 18px; height: 18px; flex-shrink: 0;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    margin-top: 1px;
+  }
+  .check.green { background: rgba(34,197,94,0.1); color: #16a34a; }
+  .check.accent { background: var(--accent-dim); color: var(--accent); }
+  .expandable-note {
+    margin-top: 28px;
+    border: 1px solid var(--border-accent);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: box-shadow 0.3s;
+  }
+  .expandable-note:hover { box-shadow: 0 4px 16px rgba(233,69,96,0.1); }
+  .note-trigger {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px;
+    background: rgba(233,69,96,0.04);
+    cursor: pointer;
+    font-size: 13px;
+    font-variation-settings: 'wght' 550;
+    color: var(--accent);
+  }
+  .note-arrow {
+    transition: transform 0.4s var(--ease-expressive);
+  }
+  .note-arrow.open { transform: rotate(180deg); }
+  .note-body {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.5s var(--ease-smooth), padding 0.3s;
+    background: var(--surface-card);
+  }
+  .note-body.open { max-height: 300px; }
+  .note-body-inner {
+    padding: 20px;
+    font-size: 13px;
+    font-variation-settings: 'wght' 350;
+    line-height: 1.7;
+    color: var(--on-surface-dim);
+  }
+  .note-body-inner strong { font-variation-settings: 'wght' 600; color: var(--on-surface); }
+  .infra-tags {
+    display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px;
+  }
+  .infra-tag {
+    padding: 4px 10px;
+    background: var(--accent-dim);
+    border: 1px solid var(--border-accent);
+    border-radius: 100px;
+    font-size: 10px;
+    font-family: 'Roboto Mono', monospace;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── CONTACT ── */
+  .contact {
+    padding: 140px 0;
+    position: relative;
+  }
+  .contact-bg-delta {
+    position: absolute; left: -5%; top: 50%;
+    transform: translateY(-50%);
+    width: 40vw; height: 40vw;
+    max-width: 500px;
+    opacity: 0.03;
+    pointer-events: none;
+  }
+  .contact-header {
+    text-align: center;
+    margin-bottom: 80px;
+  }
+  .contact-title {
+    font-size: clamp(40px, 5vw, 72px);
+    font-variation-settings: 'wght' 800, 'wdth' 95;
+    letter-spacing: -0.04em;
+    line-height: 1.0;
+    color: var(--primary);
+    margin-bottom: 20px;
+  }
+  .contact-title .accent { color: var(--accent); }
+  .contact-sub {
+    font-size: 16px;
+    font-variation-settings: 'wght' 350;
+    color: var(--on-surface-dim);
+    line-height: 1.6;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+  .cta-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-auto-rows: 1fr;
+    gap: 24px;
+    max-width: 980px;
+    margin: 0 auto;
+    align-items: stretch;
+  }
+  .cta-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 430px;
+    background: var(--surface-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 36px 28px;
+    text-align: center;
+    position: relative; overflow: hidden;
+    transition: transform 0.5s var(--ease-expressive), box-shadow 0.5s, border-color 0.3s;
+  }
+  .cta-card::before {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    transform: scaleX(0);
+    transition: transform 0.4s var(--ease-expressive);
+  }
+  .cta-card:hover::before { transform: scaleX(1); }
+  .cta-card:hover {
+    transform: translateY(-8px) scale(1.01);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--border-accent);
+  }
+  .cta-icon-wrap {
+    width: 56px; height: 56px;
+    border-radius: var(--radius-md);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 28px;
+    transition: transform 0.4s var(--ease-expressive), border-radius 0.4s;
+    flex-shrink: 0;
+  }
+  .cta-card:hover .cta-icon-wrap {
+    transform: scale(1.1) rotate(-6deg);
+    border-radius: 30%;
+  }
+  .cta-icon-wrap.primary-bg { background: var(--surface-strong); }
+  .cta-icon-wrap.discord-bg { background: rgba(88,101,242,0.1); }
+  .cta-icon-wrap.community-bg { background: var(--surface-alt); border: 1px solid var(--border); }
+  .cta-title {
+    font-size: 16px;
+    font-variation-settings: 'wght' 700;
+    letter-spacing: -0.01em;
+    color: var(--primary);
+    margin-bottom: 12px;
+  }
+  .cta-desc {
+    font-size: 13px;
+    font-variation-settings: 'wght' 350;
+    color: var(--on-surface-muted);
+    line-height: 1.7;
+    margin-bottom: 28px;
+    max-width: 280px;
+    text-align: center;
+  }
+  .cta-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    min-width: 220px;
+    max-width: 100%;
+    padding: 14px 26px;
+    border-radius: var(--radius-xl);
+    font-size: 14px;
+    font-variation-settings: 'wght' 600;
+    cursor: pointer;
+    position: relative; overflow: hidden;
+    transition: transform 0.3s var(--ease-expressive), box-shadow 0.3s, background 0.3s;
+  }
+  .cta-btn:hover { transform: translateY(-1px); }
+  .cta-btn.btn-dark {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    box-shadow: 0 10px 30px rgba(233,69,96,0.25);
+  }
+  .cta-btn.btn-dark:hover {
+    background: rgba(233,69,96,0.92);
+    box-shadow: 0 12px 34px rgba(233,69,96,0.35);
+  }
+  .cta-btn.btn-discord {
+    background: rgba(88,101,242,0.1);
+    color: #5865F2;
+    border: 1px solid rgba(88,101,242,0.25);
+  }
+  .cta-btn.btn-discord:hover {
+    background: rgba(88,101,242,0.18);
+    box-shadow: 0 4px 16px rgba(88,101,242,0.2);
+  }
+  .cta-btn.btn-community {
+    background: var(--surface-alt);
+    color: var(--on-surface-dim);
+    border: 1px solid var(--border);
+    opacity: 0.7;
+  }
+  .cta-note {
+    margin-top: 20px;
+    font-size: 13px;
+    color: var(--on-surface-dim);
+    opacity: 0.88;
+    letter-spacing: 0.01em;
+  }
+  .wip-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    position: absolute; top: 16px; right: 16px;
+    background: rgba(251,191,36,0.12);
+    border: 1px solid rgba(251,191,36,0.35);
+    border-radius: 100px;
+    padding: 4px 10px;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #B45309;
+  }
+  .wip-dot {
+    width: 5px; height: 5px;
+    background: #D97706;
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--surface-strong);
+    padding: 64px 0 40px;
+    color: rgba(247,245,242,0.6);
+  }
+  .footer-inner {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 56px;
+    gap: 48px;
+  }
+  .footer-brand .logo {
+    font-size: 20px;
+    font-variation-settings: 'wght' 700;
+    color: #F7F5F2;
+    letter-spacing: -0.02em;
+    margin-bottom: 14px;
+  }
+  .footer-brand .logo .delta { color: var(--accent); }
+  .footer-brand p {
+    font-size: 13px;
+    font-variation-settings: 'wght' 350;
+    line-height: 1.6;
+    max-width: 280px;
+  }
+  .footer-delta {
+    width: 80px; height: 80px;
+    opacity: 0.06;
+    margin-bottom: 20px;
+  }
+  .footer-links {
+    display: flex; gap: 64px;
+  }
+  .footer-col { }
+  .footer-col-title {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(247,245,242,0.3);
+    margin-bottom: 20px;
+  }
+  .footer-col a {
+    display: block;
+    font-size: 13px;
+    font-variation-settings: 'wght' 400;
+    color: rgba(247,245,242,0.5);
+    margin-bottom: 12px;
+    transition: color 0.2s;
+  }
+  .footer-col a:hover { color: rgba(247,245,242,0.9); }
+  .footer-bottom {
+    display: flex; align-items: center; justify-content: space-between;
+    padding-top: 28px;
+    border-top: 1px solid rgba(247,245,242,0.08);
+    font-family: 'Roboto Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: rgba(247,245,242,0.25);
+  }
+  .footer-bottom .accent { color: var(--accent); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .container { padding: 0 24px; }
+    .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+    .hero-bg-delta { width: 80vw; opacity: 0.03; }
+    .services-header { grid-template-columns: 1fr; gap: 24px; }
+    .services-grid { grid-template-columns: 1fr; }
+    .services-grid .card-wide { grid-column: span 1; }
+    .hosting { margin: 0 12px; }
+    .hosting-inner { padding: 0 24px; }
+    .hosting-grid { grid-template-columns: 1fr; gap: 32px; }
+    .cta-grid { grid-template-columns: 1fr; max-width: 400px; }
+    .footer-inner { flex-direction: column; }
+    .footer-links { gap: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- LOADER -->
+<div class="loader" id="loader">
+  <div class="loader-delta">
+    <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon class="delta-fill" points="40,8 72,68 8,68"/>
+      <polyline class="delta-path" points="40,8 72,68 8,68 40,8"/>
+    </svg>
+  </div>
+  <div class="loader-text">STRΔY LABS — INICIANDO</div>
+</div>
+
+<!-- NAV -->
+<nav id="navbar">
+  <div class="nav-logo">STR<span class="delta">Δ</span>Y Labs</div>
+  <div class="nav-links">
+    <a href="#servicios">Servicios</a>
+    <a href="#infraestructura">Infraestructura</a>
+    <a href="#contacto">Contacto</a>
+    <a href="mailto:STRAY.Labs@proton.me" class="nav-cta">Presupuesto →</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Cambiar modo de color" data-hover>
+      <!-- Sol -->
+      <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+      </svg>
+      <!-- Luna -->
+      <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-delta">
+    <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="200,20 380,350 20,350" fill="var(--accent)"/>
+    </svg>
+  </div>
+  <div class="container" style="width:100%">
+    <div class="hero-grid">
+      <div class="hero-content">
+        <div class="hero-eyebrow reveal">
+          <span class="eyebrow-dot"></span>
+          Estudio Digital Independiente
+        </div>
+        <h1 class="hero-title reveal reveal-delay-1">
+          <span class="block">Tu próxima</span>
+          <span class="block accent">presencia</span>
+          <span class="block">digital.</span>
+        </h1>
+        <p class="hero-sub reveal reveal-delay-2">
+          Diseñamos y desarrollamos webs de alto impacto para negocios que no se conforman con lo ordinario. Calidad editorial. Código limpio. Resultados medibles.
+        </p>
+        <!-- SLOGAN ROTATOR -->
+        <div class="slogan-wrap reveal reveal-delay-3">
+          <div class="slogan-track" id="sloganTrack">
+            <div class="slogan-item"><span class="slogan-bar"></span>Tu marca, redefinida desde el primer píxel.</div>
+            <div class="slogan-item"><span class="slogan-bar"></span>Donde la estrategia se convierte en experiencia.</div>
+            <div class="slogan-item"><span class="slogan-bar"></span>Diseño de alto valor para clientes que exigen excelencia.</div>
+            <div class="slogan-item"><span class="slogan-bar"></span>Código limpio. Identidad poderosa. Resultados tangibles.</div>
+            <div class="slogan-item"><span class="slogan-bar"></span>No seguimos tendencias — las definimos.</div>
+            <div class="slogan-item"><span class="slogan-bar"></span>Cada proyecto, una oportunidad de crear algo memorable.</div>
+            <div class="slogan-item"><span class="slogan-bar"></span>Precisión técnica al servicio de tu visión de negocio.</div>
+            <div class="slogan-item"><span class="slogan-bar"></span>La presencia digital que tu empresa merece y necesita.</div>
+            <div class="slogan-item"><span class="slogan-bar"></span>Interfaces que convierten visitantes en clientes convencidos.</div>
+            <div class="slogan-item"><span class="slogan-bar"></span>Infraestructura robusta. Diseño sin compromisos.</div>
+            <!-- duplicado para ciclo infinito suave -->
+            <div class="slogan-item"><span class="slogan-bar"></span>Tu marca, redefinida desde el primer píxel.</div>
+          </div>
+        </div>
+        <div class="hero-actions reveal reveal-delay-4">
+          <a href="mailto:STRAY.Labs@proton.me" class="btn-primary" data-hover>
+            <span>Solicitar presupuesto</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 8h10M9 4l4 4-4 4"/>
+            </svg>
+          </a>
+          <a href="#servicios" class="btn-ghost" data-hover>Ver servicios</a>
+        </div>
+      </div>
+      <div class="hero-visual reveal reveal-delay-2">
+        <div class="hero-card" data-hover>
+          <div class="hero-card-badge">
+            <span class="card-live-dot"></span>
+            Disponible ahora
+          </div>
+          <div class="hero-card-stat">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">Proyectos a medida — sin plantillas</span>
+          </div>
+          <div style="border-top: 1px solid var(--border); padding-top: 20px; margin-top: 4px;">
+            <div style="font-size:12px; font-variation-settings:'wght' 500; color:var(--on-surface-dim); margin-bottom:14px; letter-spacing:0.02em;">ÁREAS DE ESPECIALIZACIÓN</div>
+            <div class="hero-card-tags">
+              <span class="tag">UI/UX Design</span>
+              <span class="tag">Desarrollo Web</span>
+              <span class="tag">Branding Digital</span>
+              <span class="tag">Infraestructura</span>
+              <span class="tag">Optimización SEO</span>
+              <span class="tag">Material 3</span>
+            </div>
+          </div>
+          <div class="card-delta-bg">
+            <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="60,5 115,110 5,110" fill="var(--accent)"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-scroll-hint">
+    <div class="scroll-line"></div>
+    <span>scroll</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="marquee-item"><span class="marker">Δ</span> Diseño Editorial</span>
+    <span class="marquee-item"><span class="marker">Δ</span> Material Expressive</span>
+    <span class="marquee-item"><span class="marker">Δ</span> Performance First</span>
+    <span class="marquee-item"><span class="marker">Δ</span> Código Limpio</span>
+    <span class="marquee-item"><span class="marker">Δ</span> UI/UX Premium</span>
+    <span class="marquee-item"><span class="marker">Δ</span> Presupuesto Flexible</span>
+    <span class="marquee-item"><span class="marker">Δ</span> Responsive Design</span>
+    <span class="marquee-item"><span class="marker">Δ</span> Despliegue Ágil</span>
+    <!-- duplicado para efecto infinito -->
+    <span class="marquee-item"><span class="marker">Δ</span> Diseño Editorial</span>
+    <span class="marquee-item"><span class="marker">Δ</span> Material Expressive</span>
+    <span class="marquee-item"><span class="marker">Δ</span> Performance First</span>
+    <span class="marquee-item"><span class="marker">Δ</span> Código Limpio</span>
+    <span class="marquee-item"><span class="marker">Δ</span> UI/UX Premium</span>
+    <span class="marquee-item"><span class="marker">Δ</span> Presupuesto Flexible</span>
+    <span class="marquee-item"><span class="marker">Δ</span> Responsive Design</span>
+    <span class="marquee-item"><span class="marker">Δ</span> Despliegue Ágil</span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="servicios">
+  <div class="container">
+    <div class="services-header">
+      <div>
+        <div class="section-label reveal">Lo que hacemos</div>
+        <h2 class="section-title reveal reveal-delay-1">
+          Creamos lo que<br><span class="accent">distingue</span>.
+        </h2>
+      </div>
+      <p class="services-desc reveal reveal-delay-2">
+        Cada proyecto es una oportunidad de crear algo único. No seguimos tendencias: las marcamos. Nuestro proceso combina estrategia, diseño de alto nivel y tecnología de vanguardia.
+      </p>
+    </div>
+    <div class="services-grid">
+
+      <!-- Card 1 - wide -->
+      <div class="service-card card-wide reveal reveal-delay-1" data-hover>
+        <span class="service-number">01</span>
+        <div class="service-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+          </svg>
+        </div>
+        <div class="service-title">Diseño Web & UI/UX</div>
+        <div class="service-desc">Interfaces de alta fidelidad con fundamentos de Material 3 Expressive. Cada píxel tiene una razón de ser: jerarquía visual, microinteracciones y sistemas de diseño escalables que elevan tu marca por encima del ruido.</div>
+        <div class="service-tags">
+          <span class="service-tag">Figma</span>
+          <span class="service-tag">Material 3</span>
+          <span class="service-tag">Design Systems</span>
+          <span class="service-tag">Prototyping</span>
+        </div>
+        <div class="card-delta-accent">
+          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="50,5 95,95 5,95" fill="var(--accent)"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="service-card reveal reveal-delay-2" data-hover>
+        <span class="service-number">02</span>
+        <div class="service-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+          </svg>
+        </div>
+        <div class="service-title">Desarrollo Frontend</div>
+        <div class="service-desc">Código modular, semántico y optimizado. HTML, CSS y JavaScript puros o frameworks modernos según la necesidad de cada proyecto.</div>
+        <div class="service-tags">
+          <span class="service-tag">HTML/CSS/JS</span>
+          <span class="service-tag">React</span>
+          <span class="service-tag">Performance</span>
+        </div>
+        <div class="card-delta-accent">
+          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="50,5 95,95 5,95" fill="var(--accent)"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="service-card reveal reveal-delay-2" data-hover>
+        <span class="service-number">03</span>
+        <div class="service-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="2"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/>
+          </svg>
+        </div>
+        <div class="service-title">Identidad de Marca</div>
+        <div class="service-desc">Sistemas visuales coherentes y memorables. Desde el logotipo hasta el sistema tipográfico y paleta cromática, construimos identidades con carácter propio.</div>
+        <div class="service-tags">
+          <span class="service-tag">Branding</span>
+          <span class="service-tag">Logotipo</span>
+          <span class="service-tag">Guía de estilo</span>
+        </div>
+        <div class="card-delta-accent">
+          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="50,5 95,95 5,95" fill="var(--accent)"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="service-card reveal reveal-delay-3" data-hover>
+        <span class="service-number">04</span>
+        <div class="service-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+          </svg>
+        </div>
+        <div class="service-title">Optimización & SEO</div>
+        <div class="service-desc">Core Web Vitals óptimos, estructura semántica y estrategia de contenido. Tu web visible, rápida y relevante para los motores de búsqueda.</div>
+        <div class="service-tags">
+          <span class="service-tag">SEO Técnico</span>
+          <span class="service-tag">Core Web Vitals</span>
+          <span class="service-tag">Analytics</span>
+        </div>
+        <div class="card-delta-accent">
+          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="50,5 95,95 5,95" fill="var(--accent)"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Card 5 - wide -->
+      <div class="service-card card-wide reveal reveal-delay-4" data-hover>
+        <span class="service-number">05</span>
+        <div class="service-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/>
+            <line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/>
+          </svg>
+        </div>
+        <div class="service-title">Despliegue & Infraestructura</div>
+        <div class="service-desc">Desde publicaciones nativas en GitHub Pages hasta entornos personalizados con dominio propio, escalabilidad cloud e integraciones avanzadas. Adaptamos la infraestructura a tus necesidades reales, no al revés.</div>
+        <div class="service-tags">
+          <span class="service-tag">GitHub Pages</span>
+          <span class="service-tag">Dominio Personalizado</span>
+          <span class="service-tag">CI/CD</span>
+          <span class="service-tag">Cloud Hosting</span>
+        </div>
+        <div class="card-delta-accent">
+          <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="50,5 95,95 5,95" fill="var(--accent)"/>
+          </svg>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- HOSTING / INFRASTRUCTURE -->
+<section id="infraestructura">
+  <div class="hosting">
+    <div class="hosting-inner">
+      <div class="section-label reveal">Hosting & Infraestructura</div>
+      <h2 class="section-title reveal reveal-delay-1" style="margin-bottom:60px;">
+        Modelo de presupuesto<br><span class="accent">flexible</span> y transparente.
+      </h2>
+      <div class="hosting-grid">
+
+        <!-- Plan Base -->
+        <div class="hosting-plan reveal reveal-delay-1" data-hover>
+          <div class="plan-badge base">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><circle cx="5" cy="5" r="5"/></svg>
+            Plan Base
+          </div>
+          <div class="plan-title">GitHub Pages</div>
+          <div class="plan-desc">Publicación nativa y gratuita vía GitHub Pages bajo nuestro subdominio de despliegue. Solo se cobra el coste de diseño y desarrollo del proyecto.</div>
+          <ul class="plan-features">
+            <li>
+              <span class="check green">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 5l2.5 2.5 3.5-3.5"/></svg>
+              </span>
+              Hosting gratuito en GitHub Pages
+            </li>
+            <li>
+              <span class="check green">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 5l2.5 2.5 3.5-3.5"/></svg>
+              </span>
+              SSL/HTTPS incluido automáticamente
+            </li>
+            <li>
+              <span class="check green">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 5l2.5 2.5 3.5-3.5"/></svg>
+              </span>
+              Despliegue vía CI/CD (push automático)
+            </li>
+            <li>
+              <span class="check green">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 5l2.5 2.5 3.5-3.5"/></svg>
+              </span>
+              Entrega del código fuente completo
+            </li>
+          </ul>
+        </div>
+
+        <!-- Plan Custom -->
+        <div class="hosting-plan reveal reveal-delay-2" data-hover>
+          <div class="plan-badge custom">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="currentColor"><polygon points="5,0 9,9 1,9"/></svg>
+            Plan Personalizado
+          </div>
+          <div class="plan-title">Infraestructura a Medida</div>
+          <div class="plan-desc">Si tu proyecto requiere algo más, lo adaptamos. Sin compromisos fijos: el coste extra se calcula en función de tus necesidades específicas.</div>
+          <ul class="plan-features">
+            <li>
+              <span class="check accent">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 5l2.5 2.5 3.5-3.5"/></svg>
+              </span>
+              Dominio personalizado (ej. tu-marca.com)
+            </li>
+            <li>
+              <span class="check accent">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 5l2.5 2.5 3.5-3.5"/></svg>
+              </span>
+              Hosting cloud escalable (Vercel, Netlify, VPS…)
+            </li>
+            <li>
+              <span class="check accent">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 5l2.5 2.5 3.5-3.5"/></svg>
+              </span>
+              Integraciones avanzadas (CMS, APIs, Auth…)
+            </li>
+            <li>
+              <span class="check accent">
+                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 5l2.5 2.5 3.5-3.5"/></svg>
+              </span>
+              Tiempos de despliegue prioritarios
+            </li>
+          </ul>
+          <div class="expandable-note">
+            <div class="note-trigger" id="noteTrigger" data-hover>
+              <span>¿Cómo se calcula el coste adicional?</span>
+              <svg class="note-arrow" id="noteArrow" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 6l4 4 4-4"/>
+              </svg>
+            </div>
+            <div class="note-body" id="noteBody">
+              <div class="note-body-inner">
+                <strong>Presupuesto 100% adaptable.</strong> No existe una tarifa fija para infraestructura personalizada. Analizamos juntos tu escala de usuarios, integraciones y requisitos de disponibilidad para ofrecerte un coste exacto y justo.
+                <div class="infra-tags">
+                  <span class="infra-tag">Escala de tráfico</span>
+                  <span class="infra-tag">Integraciones</span>
+                  <span class="infra-tag">SLA/Uptime</span>
+                  <span class="infra-tag">Mantenimiento</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT / CTAs -->
+<section class="contact" id="contacto">
+  <div class="contact-bg-delta">
+    <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="200,20 380,360 20,360" fill="var(--accent)"/>
+    </svg>
+  </div>
+  <div class="container">
+    <div class="contact-header">
+      <div class="section-label reveal" style="justify-content:center;">Trabajemos juntos</div>
+      <h2 class="contact-title reveal reveal-delay-1">
+        ¿Listo para crear<br>algo <span class="accent">notable</span>?
+      </h2>
+      <p class="contact-sub reveal reveal-delay-2">
+        Sin formularios interminables. Sin esperas. Contacta directamente y recibe un presupuesto a medida en menos de 24 horas.
+      </p>
+    </div>
+    <div class="cta-grid">
+
+      <!-- CTA 1: Email -->
+      <div class="cta-card reveal reveal-delay-1" data-hover>
+        <div class="cta-icon-wrap primary-bg">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F7F5F2" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </div>
+        <div class="cta-title">Solicita tu presupuesto</div>
+        <div class="cta-desc">Cuéntanos tu proyecto para recibir una propuesta personalizada sin compromiso.</div>
+        <a href="mailto:STRAY.Labs@proton.me" class="cta-btn btn-dark" aria-label="Enviar correo a STRAY.Labs@proton.me">
+          <span>Contactar por email</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </a>
+        <div class="cta-note">STRAY.Labs@proton.me</div>
+      </div>
+
+      <!-- CTA 2: Discord DM -->
+      <div class="cta-card reveal reveal-delay-2" data-hover>
+        <div class="cta-icon-wrap discord-bg">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="#5865F2">
+            <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03z"/>
+          </svg>
+        </div>
+        <div class="cta-title">Soporte Directo</div>
+        <div class="cta-desc">¿Tienes dudas? Envíanos un DM directo en Discord. Respuesta rápida garantizada.</div>
+        <a href="https://discord.com/users/903288493659258971" target="_blank" rel="noopener" class="cta-btn btn-discord">
+          <span>Abrir DM en Discord</span>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6h8M7 3l3 3-3 3"/></svg>
+        </a>
+      </div>
+
+      <!-- CTA 3: Community (WIP) -->
+      <div class="cta-card reveal reveal-delay-3" data-hover>
+        <div class="wip-badge">
+          <span class="wip-dot"></span>
+          En Construcción
+        </div>
+        <div class="cta-icon-wrap community-bg">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--on-surface-dim)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+          </svg>
+        </div>
+        <div class="cta-title">Comunidad</div>
+        <div class="cta-desc">Nuestro servidor comunitario pronto estará disponible. Únete a la lista de espera.</div>
+        <span class="cta-btn btn-community">
+          <span>Próximamente</span>
+        </span>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-delta">
+          <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="40,4 76,72 4,72" fill="#E94560"/>
+          </svg>
+        </div>
+        <div class="logo">STR<span class="delta">Δ</span>Y Labs</div>
+        <p>Estudio digital independiente. Diseño editorial de alto nivel, desarrollo frontend de precisión e infraestructura a medida.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <div class="footer-col-title">Servicios</div>
+          <a href="#servicios">Diseño UI/UX</a>
+          <a href="#servicios">Desarrollo Frontend</a>
+          <a href="#servicios">Identidad de Marca</a>
+          <a href="#infraestructura">Infraestructura</a>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Contacto</div>
+          <a href="mailto:STRAY.Labs@proton.me">Email directo</a>
+          <a href="https://discord.com/users/903288493659258971" target="_blank" rel="noopener">Discord DM</a>
+          <a href="#contacto">Presupuesto</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 STR<span class="accent">Δ</span>Y Labs. Todos los derechos reservados.</span>
+      <span>Hecho con precisión — <span class="accent">Δ</span></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ── LOADER ── */
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('loader').classList.add('out');
+    }, 2000);
+  });
+
+  /* ── CUSTOM CURSOR ── */
+  const cursor = document.getElementById('cursor');
+  const cursorRing = document.getElementById('cursorRing');
+  let mouseX = 0, mouseY = 0;
+  let ringX = 0, ringY = 0;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    cursor.style.left = mouseX + 'px';
+    cursor.style.top = mouseY + 'px';
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.12;
+    ringY += (mouseY - ringY) * 0.12;
+    cursorRing.style.left = ringX + 'px';
+    cursorRing.style.top = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  document.querySelectorAll('[data-hover], a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.classList.add('hover');
+      cursorRing.classList.add('hover');
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.classList.remove('hover');
+      cursorRing.classList.remove('hover');
+    });
+  });
+
+  document.addEventListener('mousedown', () => cursor.classList.add('click'));
+  document.addEventListener('mouseup', () => cursor.classList.remove('click'));
+
+  /* ── SCROLL PROGRESS ── */
+  window.addEventListener('scroll', () => {
+    const progress = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+    document.getElementById('scrollProgress').style.width = progress + '%';
+  });
+
+  /* ── NAV SCROLL ── */
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  /* ── REVEAL ANIMATIONS ── */
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => observer.observe(el));
+
+  /* ── EXPANDABLE NOTE ── */
+  const noteTrigger = document.getElementById('noteTrigger');
+  const noteBody = document.getElementById('noteBody');
+  const noteArrow = document.getElementById('noteArrow');
+  noteTrigger.addEventListener('click', () => {
+    noteBody.classList.toggle('open');
+    noteArrow.classList.toggle('open');
+  });
+
+  /* ── SUBTLE PARALLAX ── */
+  window.addEventListener('scroll', () => {
+    const scrollY = window.scrollY;
+    const heroDelta = document.querySelector('.hero-bg-delta');
+    const contactDelta = document.querySelector('.contact-bg-delta');
+    if (heroDelta) heroDelta.style.transform = `translateY(calc(-50% + ${scrollY * 0.08}px))`;
+    if (contactDelta) contactDelta.style.transform = `translateY(calc(-50% + ${scrollY * 0.04}px))`;
+  }, { passive: true });
+
+  /* ── HERO CARD 3D TILT ── */
+  const heroCard = document.querySelector('.hero-card');
+  if (heroCard) {
+    heroCard.addEventListener('mousemove', e => {
+      const rect = heroCard.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      heroCard.style.transform = `perspective(800px) rotateY(${x * 8}deg) rotateX(${-y * 8}deg) translateY(-4px)`;
+    });
+    heroCard.addEventListener('mouseleave', () => {
+      heroCard.style.transform = '';
+    });
+  }
+
+  /* ── THEME TOGGLE ── */
+  const html = document.documentElement;
+  const themeToggle = document.getElementById('themeToggle');
+  // Dark by default — already set in HTML class
+  themeToggle.addEventListener('click', () => {
+    html.classList.toggle('dark');
+    // Persist preference
+    localStorage.setItem('stray-theme', html.classList.contains('dark') ? 'dark' : 'light');
+  });
+  // Respect saved preference (but default dark if nothing saved)
+  const saved = localStorage.getItem('stray-theme');
+  if (saved === 'light') html.classList.remove('dark');
+
+  /* ── SLOGAN ROTATOR ── */
+  const track = document.getElementById('sloganTrack');
+  const ITEM_H = 28; // px — matches CSS height
+  const TOTAL = 10;  // real slogans (not the duplicated last one)
+  let current = 0;
+  let sloganTimer;
+
+  function nextSlogan() {
+    current++;
+    track.style.transform = `translateY(-${current * ITEM_H}px)`;
+    // When we've shown all (landed on duplicate of first), silently reset
+    if (current >= TOTAL) {
+      setTimeout(() => {
+        track.style.transition = 'none';
+        current = 0;
+        track.style.transform = 'translateY(0)';
+        // Re-enable transition after the silent jump
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          track.style.transition = '';
+        }));
+      }, 750);
+    }
+  }
+
+  // Start after page load animation settles
+  setTimeout(() => {
+    sloganTimer = setInterval(nextSlogan, 3200);
+  }, 2600);
+
+  function animateCounter(el, target, duration = 1200) {
+    let start = 0;
+    const step = timestamp => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(eased * target) + '%';
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }
+  const statNumber = document.querySelector('.stat-number');
+  if (statNumber) {
+    const counterObserver = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting) {
+        animateCounter(statNumber, 100);
+        counterObserver.disconnect();
+      }
+    }, { threshold: 0.5 });
+    counterObserver.observe(statNumber);
+  }
+</script>
+</body>
+</html>
