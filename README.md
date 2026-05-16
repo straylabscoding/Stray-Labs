@@ -32,8 +32,8 @@ Un laboratorio pequeño que construye cosas reales para gente real.
 
 ## Contacto
 
-- Discord: [discord.gg/erWT2w9T](https://discord.gg/erWT2w9T)
-- Email: realplus.studios@outlook.es
+- Discord: espera colegon, pronto estara listo el server, paciencia.
+- Correo: STRAY.Labs@proton.me
 
 ---
 
