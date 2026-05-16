@@ -37,4 +37,4 @@ Un laboratorio pequeño que construye cosas reales para gente real.
 
 ---
 
-*STRΔY Labs — 2025*
+*STRΔY Labs — 2026*
