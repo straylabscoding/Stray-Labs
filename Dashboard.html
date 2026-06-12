@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STR∆Y Labs — Panel de Gestión</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dashboard-layout">
+    <div class="dot-grid"></div>
+
+    <header class="main-header">
+        <div class="logo-container">
+            <span class="logo-symbol">▲</span>
+            <span class="logo-text">STR∆Y Labs</span>
+            <span class="status-badge"><span class="status-dot green"></span> CONEXIÓN ENCRIPTADA</span>
+        </div>
+        <nav class="main-nav">
+            <button id="action-logout" class="nav-auth-btn exit-btn">Desconectar Sesión ✕</button>
+        </nav>
+    </header>
+
+    <main class="panel-content">
+        <div class="panel-hero">
+            <span class="glifo-deco">// CONTEXTO: CONSOLA DE CLIENTE</span>
+            <h1 id="client-greeting">Inicializando sesión...</h1>
+            <p>Control de fases, despliegue y estado de dominios para tu negocio en internet.</p>
+        </div>
+
+        <div class="panel-matrix">
+            <div class="matrix-box">
+                <h3>Estado del Desarrollo</h3>
+                <div class="timeline-step done">
+                    <span class="step-indicator">✔</span>
+                    <p>Fase 01: Análisis de estructura e identidad (Finalizado)</p>
+                </div>
+                <div class="timeline-step current">
+                    <span class="step-indicator loading-pulse">◆</span>
+                    <p>Fase 02: Escritura de código limpio en GitHub (En desarrollo...)</p>
+                </div>
+                <div class="timeline-step future">
+                    <span class="step-indicator">𝌀</span>
+                    <p>Fase 03: Pruebas de velocidad y conexión a Firebase</p>
+                </div>
+            </div>
+
+            <div class="matrix-box">
+                <h3>Asignación de Enrutamiento (DNS)</h3>
+                <div class="dns-preview">
+                    <span class="dns-label">SUBDOMINIO ASIGNADO:</span>
+                    <div class="dns-value">tu-marca.straylabs.io</div>
+                </div>
+                <div class="dns-tier">
+                    <span class="tier-tag">PLAN ACTUAL: ESENCIAL</span>
+                    <p>Hospedaje de alta fidelidad coste 0€/mes activo en GitHub Pages de forma permanente.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js" type="module"></script>
+</body>
+</html>
