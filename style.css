@@ -1,0 +1,367 @@
+/* ==========================================
+   RESET GLOBAL Y VARIABLES DE COLOR (OLED)
+   ========================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    --background: #000000;
+    --background-card: #050505;
+    --text-main: #ffffff;
+    --text-muted: #777777;
+    --accent: #ffffff;
+    --accent-inverse: #000000;
+    --border: #141414;
+    --grid-color: rgba(255, 255, 255, 0.02);
+    --switch-bg: #1a1a1a;
+    --switch-btn: #ffffff;
+
+    background-color: var(--background);
+    color: var(--text-main);
+    min-height: 100vh;
+    transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
+}
+
+body.light-mode {
+    --background: #faf9f6;
+    --background-card: #ffffff;
+    --text-main: #111111;
+    --text-muted: #666666;
+    --accent: #111111;
+    --accent-inverse: #ffffff;
+    --border: #e2dfd5;
+    --grid-color: rgba(0, 0, 0, 0.03);
+    --switch-bg: #eae7dc;
+    --switch-btn: #111111;
+}
+
+/* Fondo técnico de puntos de las capturas */
+.dot-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: radial-gradient(var(--grid-color) 1px, transparent 1px);
+    background-size: 24px 24px;
+    z-index: 0;
+    pointer-events: none;
+}
+
+main, header, footer {
+    position: relative;
+    z-index: 1;
+}
+
+/* ==========================================
+   HEADER & INTERRUPTOR SIN PARPADEO
+   ========================================== */
+.main-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 3rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.logo-symbol { font-weight: 900; }
+.logo-text { font-weight: 800; letter-spacing: -0.5px; }
+
+.status-badge {
+    font-family: monospace;
+    font-size: 0.75rem;
+    background-color: var(--border);
+    padding: 0.2rem 0.5rem;
+    color: var(--text-muted);
+}
+
+.status-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    background-color: #00ff66;
+    border-radius: 50%;
+    margin-right: 0.2rem;
+}
+
+.main-nav {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.main-nav a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.main-nav a:hover { color: var(--text-main); }
+
+.nav-auth-btn {
+    border: 1px solid var(--text-main);
+    padding: 0.4rem 1rem;
+    text-decoration: none;
+    color: var(--text-main) !important;
+    font-size: 0.85rem;
+    font-weight: 600;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-auth-btn:hover {
+    background-color: var(--text-main);
+    color: var(--background) !important;
+}
+
+.switch-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.switch-tag {
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+}
+
+.wall-switch {
+    width: 46px;
+    height: 24px;
+    background-color: var(--switch-bg);
+    border: 1px solid var(--border);
+    position: relative;
+    cursor: pointer;
+    outline: none;
+}
+
+.switch-knob {
+    width: 18px;
+    height: 20px;
+    background-color: var(--switch-btn);
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body.light-mode .switch-knob { transform: translateX(24px); }
+
+/* ==========================================
+   SECCIÓN HERO Y SLOGAN ROTATIVO ANIMADO
+   ========================================== */
+.hero-section {
+    min-height: 65vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.hero-content {
+    animation: fadeUpBlur 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.tech-tag {
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    margin-bottom: 1.5rem;
+}
+
+h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1.15;
+    margin-bottom: 1.8rem;
+}
+
+.static-slogan {
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+#rotative-word {
+    display: inline-block;
+    color: var(--text-main);
+    font-weight: 800;
+    border-right: 2px solid var(--text-main);
+    padding-right: 6px;
+    white-space: nowrap;
+}
+
+.hero-content p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 650px;
+    margin: 0 auto 2.5rem auto;
+    line-height: 1.6;
+}
+
+.hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+}
+
+.btn-core {
+    background-color: var(--accent);
+    color: var(--accent-inverse);
+    padding: 0.9rem 2rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-subtle {
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 0.9rem 2rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+/* ==========================================
+   MICRO-ANIMACIONES INTERACTIVAS EN HOVER
+   ========================================== */
+.feature-card, .price-card, .contact-item, .community-box {
+    background-color: var(--background-card);
+    border: 1px solid var(--border);
+    padding: 2.5rem;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.feature-card:hover, .price-card:hover, .contact-item:hover {
+    transform: translateY(-4px);
+    border-color: var(--text-main);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* ESTRUCTURAS GENERALES */
+.section-container { padding: 6rem 3rem; border-top: 1px solid var(--border); }
+.section-header { margin-bottom: 4rem; }
+.section-number { font-family: monospace; color: var(--text-muted); font-size: 0.85rem; }
+.features-grid, .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+.card-meta { font-family: monospace; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 1rem; }
+.price-badge { font-family: monospace; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 1rem; }
+.price-amount { font-size: 1.8rem; font-weight: 800; margin-bottom: 0.5rem; }
+.price-list { list-style: none; margin: 2rem 0; }
+.price-list li { margin-bottom: 0.8rem; font-size: 0.9rem; }
+.price-list span { color: var(--text-muted); margin-right: 0.5rem; }
+.special-card { border: 1px solid var(--text-main); }
+.block-btn { display: block; text-align: center; width: 100%; }
+
+.light-btn {
+    background-color: var(--background);
+    color: var(--text-main);
+    border: 1px solid var(--border);
+}
+.light-btn:hover { background-color: var(--text-main); color: var(--background); }
+
+/* ==========================================
+   CONTACTO CON BOTÓN DE GRÚA INHABILITADO
+   ========================================== */
+.contact-layout { display: grid; grid-template-columns: 1.5fr 1fr; gap: 3rem; }
+.contact-intro { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2rem; line-height: 1.5; }
+.contact-links-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+.contact-item { display: flex; justify-content: space-between; align-items: center; padding: 1.5rem; text-decoration: none; color: var(--text-main); }
+.item-meta { font-family: monospace; font-size: 0.75rem; color: var(--text-muted); }
+.item-val { font-weight: 600; font-size: 0.95rem; }
+
+.community-box { display: flex; flex-direction: column; justify-content: center; }
+.glifo-deco { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 1rem; }
+.community-box h4 { margin-bottom: 0.8rem; }
+.community-box p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; margin-bottom: 2rem; }
+
+.btn-construction {
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--border);
+    border: 1px dashed var(--text-muted);
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-align: center;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* ==========================================
+   INTERFACES SSPA AUTH & DASHBOARD
+   ========================================== */
+.center-auth-layout { display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; }
+.auth-card { background-color: var(--background-card); border: 1px solid var(--border); padding: 3.5rem; width: 100%; max-width: 440px; }
+.link-back { font-size: 0.8rem; color: var(--text-muted); text-decoration: none; display: inline-block; margin-bottom: 2rem; }
+.auth-brand { font-weight: 900; margin-bottom: 0.5rem; }
+.auth-desc { color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; margin-bottom: 2.5rem; }
+.field-group { margin-bottom: 1.5rem; }
+.field-group label { display: block; font-family: monospace; font-size: 0.7rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+.field-group input { width: 100%; background-color: var(--background); border: 1px solid var(--border); padding: 1rem; color: var(--text-main); outline: none; }
+.auth-switcher { text-align: center; margin-top: 2rem; font-size: 0.85rem; color: var(--text-muted); }
+.auth-switcher a { color: var(--text-main); text-decoration: none; font-weight: 600; }
+
+.dashboard-layout .panel-content { max-width: 1100px; margin: 4rem auto; padding: 0 2rem; }
+.panel-hero { border-bottom: 1px solid var(--border); padding-bottom: 2rem; margin-bottom: 3rem; }
+.panel-hero h1 { font-size: 2.8rem; letter-spacing: -1.5px; margin: 0.5rem 0; }
+.panel-matrix { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem; }
+.matrix-box { background-color: var(--background-card); border: 1px solid var(--border); padding: 2.5rem; }
+.timeline-step { display: flex; align-items: flex-start; gap: 1rem; margin-top: 1.5rem; font-size: 0.9rem; }
+.step-indicator { font-family: monospace; font-weight: 700; }
+.timeline-step.done { color: var(--text-muted); }
+.timeline-step.done .step-indicator { color: #00ff66; }
+.timeline-step.current .step-indicator { color: #ffcc00; }
+.timeline-step.future { color: var(--text-muted); }
+.dns-preview { margin: 1.5rem 0; }
+.dns-label { font-family: monospace; font-size: 0.7rem; color: var(--text-muted); }
+.dns-value { font-family: monospace; font-size: 1.3rem; font-weight: bold; margin-top: 0.3rem; }
+.dns-tier { border-top: 1px dashed var(--border); padding-top: 1.5rem; }
+.tier-tag { font-family: monospace; font-size: 0.75rem; background-color: var(--border); padding: 0.2rem 0.5rem; font-weight: bold; }
+.dns-tier p { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.8rem; }
+.exit-btn { background: transparent; cursor: pointer; }
+
+/* NOTIFICACIONES TOASTS & KEYFRAMES */
+#toast-wrapper { position: fixed; bottom: 2rem; right: 2rem; z-index: 1000; }
+.toast-message { background-color: var(--text-main); color: var(--background); padding: 1rem 2rem; font-weight: 600; font-size: 0.85rem; margin-top: 0.5rem; animation: triggerAlert 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+@keyframes triggerAlert { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes fadeUpBlur { from { opacity: 0; transform: translateY(30px); filter: blur(4px); } to { opacity: 1; transform: translateY(0); filter: blur(0); } }
+.loading-pulse { animation: beaconPulse 2s infinite ease-in-out; }
+@keyframes beaconPulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+.main-footer { display: flex; justify-content: space-between; align-items: center; padding: 3rem; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.8rem; }
+.footer-symbols { letter-spacing: 4px; }
+
+@media (max-width: 768px) {
+    .main-header { padding: 1rem 1.5rem; }
+    .main-nav { display: none; }
+    h1 { font-size: 2.2rem; .static-slogan { font-size: 1.5rem; } }
+    .section-container, .dashboard-layout .panel-content { padding: 4rem 1.5rem; }
+    .contact-layout { grid-template-columns: 1fr; gap: 2rem; }
+}
