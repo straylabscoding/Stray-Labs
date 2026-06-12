@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STR∆Y Labs — Crear Cuenta</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="center-auth-layout">
+    <div class="dot-grid"></div>
+
+    <div class="auth-card">
+        <a href="index.html" class="link-back">← Regresar al inicio</a>
+        <div class="auth-brand">STR∆Y Labs</div>
+        <h2>Alta de Nuevo Cliente</h2>
+        <p class="auth-desc">Configura tus credenciales de acceso seguro para monitorizar tu desarrollo web.</p>
+
+        <form id="form-register" class="interactive-form">
+            <div class="field-group">
+                <label for="email-input">DIRECCIÓN DE CORREO</label>
+                <input type="email" id="email-input" required placeholder="nombre@empresa.com">
+            </div>
+            <div class="field-group">
+                <label for="pass-input">CONTRASEÑA DE SEGURIDAD</label>
+                <input type="password" id="pass-input" required placeholder="Mínimo 6 caracteres">
+            </div>
+            <button type="submit" class="btn-core block-btn">Establecer Cuenta de Acceso ↗</button>
+        </form>
+        <div class="auth-switcher">
+            ¿Ya eres miembro? <a href="login.html">Iniciar Sesión</a>
+        </div>
+    </div>
+
+    <div id="toast-wrapper"></div>
+    <script src="script.js" type="module"></script>
+</body>
+</html>
